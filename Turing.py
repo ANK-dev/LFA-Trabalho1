@@ -18,6 +18,7 @@ class TuringMachine:
         last_state = 0
 
         for row in state_matrix:
+
             # Checks if we're in a new state from the input matrix, copies the
             # symbol dict to the state dict and clears the symbol dict for the
             # new state.
@@ -39,14 +40,27 @@ class TuringMachine:
                 self.states[last_state] = symbols.copy()
                 symbols.clear()
 
+            # Update last state for the next iteration
             last_state = row[0]
 
     def __set_state(self, next_state):
-        """Sets current state to the next state"""
+        """
+        Sets current state to the next state
+        """
         self.current_state = self.states[next_state]
 
-    def read_input(self, input_value, output_func):
-        """Reads input and processes the next state"""
+
+    def __write_output(self, output, output_func):
+        """
+        Writes the current state's output (symbol printed) to tape by calling
+        the tape writing function (passed as argument)
+        """
+        output_func(output['symbol_printed'])
+
+    def execute(self, input_value, output_func):
+        """
+        Reads input, returns output and processes the next state
+        """
         if input_value == 0 or input_value == 1 or input_value == 'b':
             if input_value in self.current_state:
                 # Gets output before changing state and writes to tape
@@ -60,57 +74,68 @@ class TuringMachine:
                 # Returns previous state output
                 return output
             else:
+                # Input key doesn't exist in current state's dictionary.
+                # Halt processing
                 print("State doesn't exist. Halt!")
                 sys.exit(0)
         else:
             # Input is not 0, 1 or blank
             raise ValueError(input_value)
 
-    def __write_output(self, output, output_func):
-        """
-        Writes the current state's output (symbol printed) to tape by calling
-        the tape writing function
-        """
-        output_func(output['symbol_printed'])
-
 class Tape:
     current_pos = 0
-    length = 100
-    data = ['b'] * length
+    length = 0
+    data = []
 
     def __init__(self, input_data, starting_index, length):
         self.length = length
         self.current_pos = starting_index
+        self.data = ['b'] * self.length
         self.__init_data(input_data, starting_index)
 
     def __init_data(self, input_data, starting_index):
-        for pos, element in zip(range(self.current_pos, self.length), input_data):
-            self.data[pos] = element
+        """
+        Initializes tape with input data from a starting index
+        """
+        for pos, element in zip(
+            range(self.current_pos, self.length), input_data
+        ):
+
+            # Hack for dealing with digit and strings, might fix later
+            self.data[pos] = (
+                int(element) if str(element).isdigit() else element
+            )
 
     def read_data(self, direction=0):
+        """
+        Reads tape data to the left, to the right or at current tape head
+        position
+        """
+
+        # Moves tape head to the left or to the right
         self.current_pos += direction
-        return (
-            # Hack for dealing with digit and strings
-            # might fix later
-            int(self.data[self.current_pos])
-            if str(self.data[self.current_pos]).isdigit()
-            else self.data[self.current_pos]
-        )
+
+        # Hack for dealing with digit and strings, might fix later
+        # if str(self.data[self.current_pos]).isdigit():
+        #     return int(self.data[self.current_pos])
+        # else:
+        return self.data[self.current_pos]
 
     def write_data(self, input_data):
+        """
+        Writes data to tape
+        """
         self.data[self.current_pos] = input_data
-
-    def print_tape(self):
-        print(self.data, end='\n\n')
 
 def main():
 
     # Tape Settings
-    # TAPE_DATA = '0110b'
-    # TAPE_LENGTH = 70
-    # TAPE_STARTING_INDEX = (tape_length - tape_data)/2
+    TAPE_DATA = '0110b'
+    TAPE_LENGTH = 21    # Change to 70 later
+    TAPE_STARTING_INDEX = (TAPE_LENGTH - len(TAPE_DATA)) // 2
 
-    state_matrix = [
+    # Turing Machine Settings
+    STATE_MATRIX = [
         [0,  0,  1,  0, 'R'],
         [0,  1,  0,  0, 'R'],
         [0, 'b', 1,  1, 'L'],
@@ -118,20 +143,25 @@ def main():
         [1,  1,  0,  1, 'R']
     ]
 
-    my_tm = TuringMachine(state_matrix)
-    my_tape = Tape('0110b', 25, 70)
-    new_dir = 0
+    # Defines new instances of a Turing Machine and its tape
+    my_tm   = TuringMachine(STATE_MATRIX)
+    my_tape = Tape(TAPE_DATA, TAPE_STARTING_INDEX, TAPE_LENGTH)
+
+    new_dir = 0   # Initial tape head direction
+    i = 0         # Current iteration
+
+    # Initial tape state
+    print(f"{i}: {my_tape.data}")
+
     while True:
         try:
-            # Fix KeyError: 'b'
-            output = my_tm.read_input(
+            i += 1
+            output = my_tm.execute(
                 my_tape.read_data(new_dir),
                 my_tape.write_data
             )
-            # print(output)
-            my_tape.print_tape()
+            print(f"{i}: {my_tape.data}")
             new_dir = 1 if output['direction'] == 'R' else -1
-
         except KeyboardInterrupt:
             print("\nExiting...")
             sys.exit(0)
