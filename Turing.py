@@ -1,6 +1,9 @@
 import sys, time
 
 class TuringMachine:
+    """
+    Defines a Turing Machine (TM)
+    """
     states        = {}
     current_state = {}
 
@@ -21,7 +24,7 @@ class TuringMachine:
             # Checks if we're in a new state from the input matrix, copies the
             # symbol dict to the state dict and clears the symbol dict for the
             # new state.
-            if row[0] > last_state:
+            if row[0] != last_state:
                 self.states[last_state] = symbols.copy()
                 symbols.clear()
 
@@ -151,15 +154,16 @@ class Tape:
                 f"{th_left}{data_str[self.current_pos]}{th_right}"
             )
 
-        data_str = str(data_str)  \
-            .replace('\'', '')    \
-            .replace('[', '[ ')   \
-            .replace(']', ' ]')   \
-            .replace(',', ' ,')   \
-            .replace(f', {th_left}'  ,  f',{th_left}') \
+        # Formatting tweaks
+        data_str = str(data_str)    \
+            .replace('\'' ,  '')    \
+            .replace('['  ,  '[ ')  \
+            .replace(']'  ,  ' ]')  \
+            .replace(','  ,  ' ,')  \
+            .replace(f', {th_left}'  ,  f',{th_left}')  \
             .replace(f'{th_right} ,' ,  f'{th_right},') \
             .replace(f'{th_right} ]' ,  f'{th_right}]') \
-            .replace(f'[ {th_left}'  ,  f'[{th_left}') \
+            .replace(f'[ {th_left}'  ,  f'[{th_left}')
 
         return data_str
 
