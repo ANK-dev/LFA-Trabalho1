@@ -1,7 +1,7 @@
 import sys, time
 
 class TuringMachine:
-    states = {}
+    states        = {}
     current_state = {}
 
     def __init__(self, state_matrix):
@@ -13,8 +13,7 @@ class TuringMachine:
         Intializes the Turing Machine's states as a dictionary of dictionaries
         of dictionaries! (Tree-like structure).
         """
-
-        symbols = {}
+        symbols    = {}
         last_state = 0
 
         for row in state_matrix:
@@ -84,8 +83,8 @@ class TuringMachine:
 
 class Tape:
     current_pos = 0
-    length = 0
-    data = []
+    length      = 0
+    data        = []
 
     def __init__(self, input_data, starting_index, length):
         self.length = length
@@ -129,6 +128,8 @@ class Tape:
 
 def main():
 
+    ################################ Settings #################################
+
     # Tape Settings
     TAPE_DATA = '0110b'
     TAPE_LENGTH = 21    # Change to 70 later
@@ -143,15 +144,21 @@ def main():
         [1,  1,  0,  1, 'R']
     ]
 
+    ###########################################################################
+
     # Defines new instances of a Turing Machine and its tape
     my_tm   = TuringMachine(STATE_MATRIX)
     my_tape = Tape(TAPE_DATA, TAPE_STARTING_INDEX, TAPE_LENGTH)
 
     new_dir = 0   # Initial tape head direction
-    i = 0         # Current iteration
+    i       = 0   # Current iteration
 
-    # Initial tape state
-    print(f"{i}: {my_tape.data}")
+    print("*** Turing Machine ***",
+          "Press CTRL+C or CTRL+D anytime to exit",
+          "",
+          sep='\n')
+
+    print(f"{i}: {my_tape.data}")  # Initial tape state
 
     while True:
         try:
