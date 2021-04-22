@@ -129,17 +129,53 @@ class Tape:
         """
         self.data[self.current_pos] = input_data
 
+    def get_data(self, direction=0):
+        """
+        Returns formated tape data with tape head overlay
+        """
+
+        # Tape head characters
+        th_left  = '>'
+        th_right = '<'
+
+        data_str = self.data.copy()
+
+        # Keep head in place if direction is past the bounds of the tape
+        try:
+            # Draw tape head overlay at new index
+            data_str[self.current_pos + direction] = (
+                f"{th_left}{data_str[self.current_pos + direction]}{th_right}"
+            )
+        except IndexError:
+            data_str[self.current_pos] = (
+                f"{th_left}{data_str[self.current_pos]}{th_right}"
+            )
+
+        data_str = str(data_str)  \
+            .replace('\'', '')    \
+            .replace('[', '[ ')   \
+            .replace(']', ' ]')   \
+            .replace(',', ' ,')   \
+            .replace(f', {th_left}'  ,  f',{th_left}') \
+            .replace(f'{th_right} ,' ,  f'{th_right},') \
+            .replace(f'{th_right} ]' ,  f'{th_right}]') \
+            .replace(f'[ {th_left}'  ,  f'[{th_left}') \
+
+        return data_str
+
 def main():
 
     ################################ Settings #################################
 
     # Tape Settings
-    # TAPE_DATA = '0110b'
-    TAPE_DATA = '1000000000000000010'
+    # TAPE_DATA = '0110'
+    TAPE_DATA = '00'
     TAPE_LENGTH = len(TAPE_DATA) + 6    # Change to 70 later
     TAPE_STARTING_INDEX = (TAPE_LENGTH - len(TAPE_DATA)) // 2
 
     # Turing Machine Settings
+    # Present State | Present Symbol | Symbol Printed | Next State | Direction
+
     # STATE_MATRIX = [
     #     [0,  0,  1,  0, 'R'],
     #     [0,  1,  0,  0, 'R'],
@@ -147,13 +183,22 @@ def main():
     #     [1,  0,  0,  1, 'R'],
     #     [1,  1,  0,  1, 'R']
     # ]
+
+    # STATE_MATRIX = [
+    #     [0,   0,   0,   1,  'R'],
+    #     [0,   1,   0,   0,  'R'],
+    #     [0,  'b', 'b',  0,  'R'],
+    #     [1,   0,   1,   0,  'R'],
+    #     [1,   1,   1,   0,  'L']
+    # ]
+
     STATE_MATRIX = [
-        [0,   0,   0,   1,  'R'],
-        [0,   1,   0,   0,  'R'],
-        [0,  'b', 'b',  0,  'R'],
-        [1,   0,   1,   0,  'R'],
-        [1,   1,   1,   0,  'L']
+        [0,   0,   1,   1,  'R'],
+        [0,   1,   0,   1,  'R'],
+        [1,   0,   1,   0,  'L'],
+        [1,   1,   0,   0,  'L']
     ]
+
 
     ###########################################################################
 
@@ -176,8 +221,8 @@ def main():
         print("\nExiting...")
         sys.exit(0)
 
-    # print(f"{i}: {my_tape.data}")  # Initial tape state
-    print(f"{i}: {my_tape.data}", end='')  # Initial tape state
+    # Initial tape state
+    print(f"{i}: {my_tape.get_data()}", end='', flush='true')
 
     while True:
         try:
@@ -186,10 +231,10 @@ def main():
                 my_tape.read_data(new_dir),
                 my_tape.write_data
             )
-            # print(f"{i}: {my_tape.data}")
-            print(f"\r{i}: {my_tape.data}", end='')
-            time.sleep(1/3)
+
+            time.sleep(0.5)
             new_dir = 1 if output['direction'] == 'R' else -1
+            print(f"\r{i}: {my_tape.get_data(new_dir)}", end='', flush='true')
         except KeyboardInterrupt:
             print("\nHalting...")
             sys.exit(0)
