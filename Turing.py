@@ -75,7 +75,7 @@ class TuringMachine:
             else:
                 # Input key doesn't exist in current state's dictionary.
                 # Halt processing
-                print("State doesn't exist. Halt!")
+                print("\nState doesn't exist! Halt!")
                 sys.exit(0)
         else:
             # Input is not 0, 1 or blank
@@ -99,7 +99,6 @@ class Tape:
         for pos, element in zip(
             range(self.current_pos, self.length), input_data
         ):
-
             # Hack for dealing with digit and strings, might fix later
             self.data[pos] = (
                 int(element) if str(element).isdigit() else element
@@ -114,11 +113,15 @@ class Tape:
         # Moves tape head to the left or to the right
         self.current_pos += direction
 
-        # Hack for dealing with digit and strings, might fix later
-        # if str(self.data[self.current_pos]).isdigit():
-        #     return int(self.data[self.current_pos])
-        # else:
-        return self.data[self.current_pos]
+        try:
+            return self.data[self.current_pos]
+        except IndexError:
+            # Stop execution if bounds of tape are reached
+            lr_bound = (
+                'Right' if self.current_pos > len(self.data) - 1 else 'Left'
+            )
+            print(f"\n{lr_bound} bound of tape reached! Halt!")
+            sys.exit(1)
 
     def write_data(self, input_data):
         """
@@ -131,17 +134,25 @@ def main():
     ################################ Settings #################################
 
     # Tape Settings
-    TAPE_DATA = '0110b'
-    TAPE_LENGTH = 21    # Change to 70 later
+    # TAPE_DATA = '0110b'
+    TAPE_DATA = '1000000000000000010'
+    TAPE_LENGTH = len(TAPE_DATA) + 6    # Change to 70 later
     TAPE_STARTING_INDEX = (TAPE_LENGTH - len(TAPE_DATA)) // 2
 
     # Turing Machine Settings
+    # STATE_MATRIX = [
+    #     [0,  0,  1,  0, 'R'],
+    #     [0,  1,  0,  0, 'R'],
+    #     [0, 'b', 1,  1, 'L'],
+    #     [1,  0,  0,  1, 'R'],
+    #     [1,  1,  0,  1, 'R']
+    # ]
     STATE_MATRIX = [
-        [0,  0,  1,  0, 'R'],
-        [0,  1,  0,  0, 'R'],
-        [0, 'b', 1,  1, 'L'],
-        [1,  0,  0,  1, 'R'],
-        [1,  1,  0,  1, 'R']
+        [0,   0,   0,   1,  'R'],
+        [0,   1,   0,   0,  'R'],
+        [0,  'b', 'b',  0,  'R'],
+        [1,   0,   1,   0,  'R'],
+        [1,   1,   1,   0,  'L']
     ]
 
     ###########################################################################
@@ -153,12 +164,20 @@ def main():
     new_dir = 0   # Initial tape head direction
     i       = 0   # Current iteration
 
-    print("*** Turing Machine ***",
-          "Press CTRL+C or CTRL+D anytime to exit",
-          "",
+    print(f"{'*** Turing Machine ***' : ^52}",
+           "[NOTE] Press CTRL+C anytime during execution to halt",
+           "",
           sep='\n')
 
-    print(f"{i}: {my_tape.data}")  # Initial tape state
+    # Wait for user confirmation to proceed
+    try:
+        input("Press ENTER to start execution, CTRL+C to exit...")
+    except (KeyboardInterrupt, EOFError):
+        print("\nExiting...")
+        sys.exit(0)
+
+    # print(f"{i}: {my_tape.data}")  # Initial tape state
+    print(f"{i}: {my_tape.data}", end='')  # Initial tape state
 
     while True:
         try:
@@ -167,10 +186,12 @@ def main():
                 my_tape.read_data(new_dir),
                 my_tape.write_data
             )
-            print(f"{i}: {my_tape.data}")
+            # print(f"{i}: {my_tape.data}")
+            print(f"\r{i}: {my_tape.data}", end='')
+            time.sleep(1/3)
             new_dir = 1 if output['direction'] == 'R' else -1
         except KeyboardInterrupt:
-            print("\nExiting...")
+            print("\nHalting...")
             sys.exit(0)
 
 if __name__ == "__main__":
