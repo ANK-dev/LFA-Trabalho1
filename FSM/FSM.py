@@ -1,4 +1,4 @@
-import sys
+import sys, yaml
 
 class FSM:
     """
@@ -59,30 +59,20 @@ class FSM:
         """
         return self.current_state['output']
 
-"""
-Test FSM
-========
-
- Present state |  Next  state  | Output
-               | Present Input |
-               |   0       1   |
----------------+---------------+--------
-       s0      |   s1     s0   |   0
-       s1      |   s2     s1   |   1
-       s2      |   s2     s0   |   1
-
-
-For the STATE_MATRIX, each row corresponds to a state
-For each state: [Input 0 -> Next State, Input 1 -> Next State, Output]
-"""
-
 def main():
-    STATE_MATRIX = [
-        # [next0, next1, output]
-          [1,     0,     0], # s0
-          [2,     1,     1], # s1
-          [2,     0,     1], # s2
-    ]
+    ################################ Settings #################################
+
+    # Loads input data from YAML file
+    with open('FSM_input.yaml', 'r') as stream:
+        try:
+            input_data = yaml.safe_load(stream)
+        except yaml.YAMLError as error:
+            print("[ERROR] Error processing YAML file:", error)
+            sys.exit(1)
+
+    STATE_MATRIX = input_data['STATE_MATRIX']
+
+    ###########################################################################
 
     print(f"{'*** Finite State Machine ***' : ^45}",
            "[NOTE] Press CTRL+C or CTRL+D anytime to exit",

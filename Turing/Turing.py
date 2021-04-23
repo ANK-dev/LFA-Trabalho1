@@ -1,4 +1,4 @@
-import sys, time
+import sys, time, yaml
 
 class TuringMachine:
     """
@@ -7,11 +7,11 @@ class TuringMachine:
     states        = {}
     current_state = {}
 
-    def __init__(self, state_matrix):
-        self.__init_states(state_matrix)
+    def __init__(self, tm_matrix):
+        self.__init_states(tm_matrix)
         self.__set_state(0)
 
-    def __init_states(self, state_matrix):
+    def __init_states(self, tm_matrix):
         """
         Intializes the Turing Machine's states as a dictionary of dictionaries
         of dictionaries! (Tree-like structure).
@@ -19,7 +19,7 @@ class TuringMachine:
         symbols    = {}
         last_state = 0
 
-        for row in state_matrix:
+        for row in tm_matrix:
 
             # Checks if we're in a new state from the input matrix, copies the
             # symbol dict to the state dict and clears the symbol dict for the
@@ -38,7 +38,7 @@ class TuringMachine:
 
             # Special case: we're on the last row of the matrix. Copy symbol
             # dict to state dict before the end of the loop.
-            if row == state_matrix[-1]:
+            if row == tm_matrix[-1]:
                 self.states[last_state] = symbols.copy()
                 symbols.clear()
 
@@ -168,50 +168,28 @@ class Tape:
         return data_str
 
 def main():
-
     ################################ Settings #################################
 
+    # Loads input data from YAML file
+    with open('Turing_input.yaml', 'r') as stream:
+        try:
+            input_data = yaml.safe_load(stream)
+        except yaml.YAMLError as error:
+            print("[ERROR] Error processing YAML file:", error)
+            sys.exit(1)
+
     # Tape Settings
-    # TAPE_DATA = '0110'
-    TAPE_DATA = '00'
-    TAPE_LENGTH = len(TAPE_DATA) + 6    # Change to 70 later
-    TAPE_STARTING_INDEX = (TAPE_LENGTH - len(TAPE_DATA)) // 2
+    TAPE_DATA   = input_data['TAPE_DATA']
+    TAPE_LENGTH = len(TAPE_DATA) + 6        # TODO: Change to 70 later!!!
+    TAPE_STARTING_INDEX = (                 # Center data on tape
+        TAPE_LENGTH - len(TAPE_DATA)
+    ) // 2
 
     # Turing Machine Settings
-    # Present State | Present Symbol | Symbol Printed | Next State | Direction
-
-    # STATE_MATRIX = [
-    #     [0,  0,  1,  0, 'R'],
-    #     [0,  1,  0,  0, 'R'],
-    #     [0, 'b', 1,  1, 'L'],
-    #     [1,  0,  0,  1, 'R'],
-    #     [1,  1,  0,  1, 'R']
-    # ]
-
-    # STATE_MATRIX = [
-    #     [0,   0,   0,   1,  'R'],
-    #     [0,   1,   0,   0,  'R'],
-    #     [0,  'b', 'b',  0,  'R'],
-    #     [1,   0,   1,   0,  'R'],
-    #     [1,   1,   1,   0,  'L']
-    # ]
-
-    STATE_MATRIX = [
-        [0,   0,   1,   1,  'R'],
-        [0,   1,   0,   1,  'R'],
-        [1,   0,   1,   0,  'L'],
-        [1,   1,   0,   0,  'L']
-    ]
-
+    TM_MATRIX = input_data['TM_MATRIX']
+    MAX_ITER  = input_data['MAX_ITER']
 
     ###########################################################################
-
-    # Defines new instances of a Turing Machine and its tape
-    my_tm   = TuringMachine(STATE_MATRIX)
-    my_tape = Tape(TAPE_DATA, TAPE_STARTING_INDEX, TAPE_LENGTH)
-
-    new_dir = 0   # Initial tape head direction
-    i       = 0   # Current iteration
 
     print(f"{'*** Turing Machine ***' : ^52}",
            "[NOTE] Press CTRL+C anytime during execution to halt",
@@ -225,10 +203,18 @@ def main():
         print("\nExiting...")
         sys.exit(0)
 
+    # Defines new instances of a Turing Machine and its tape
+    my_tm   = TuringMachine(TM_MATRIX)
+    my_tape = Tape(TAPE_DATA, TAPE_STARTING_INDEX, TAPE_LENGTH)
+
+    new_dir = 0   # Initial tape head direction
+    i       = 0   # Current iteration
+
     # Initial tape state
     print(f"{i}: {my_tape.get_data()}", end='', flush='true')
 
-    while True:
+    # Main loop
+    while i < MAX_ITER or MAX_ITER == -1:
         try:
             i += 1
             output = my_tm.execute(
@@ -242,6 +228,8 @@ def main():
         except KeyboardInterrupt:
             print("\nHalting...")
             sys.exit(0)
+
+    print("\nMax number of iterations reached! Halt!")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,11 @@
+--- # FSM.py input data
+
+# Finite State Machine Settings
+# Each row represents a state, starting from 0
+# Label: [Input 0 -> Next State, Input 1 -> Next State, Output]
+# Types: [int,                   int,                   {0, 1}]
+STATE_MATRIX: !!seq [
+  [1,     0,     0], # s0
+  [2,     1,     1], # s1
+  [2,     0,     1], # s2
+]
