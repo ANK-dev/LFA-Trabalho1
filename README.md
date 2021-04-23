@@ -25,7 +25,8 @@ In a terminal, navigate to the directory containing the program to be run:
 `FSM/` (Finite State Machine) or `Turing/` (Turing Machine).
 
 Adjustments to the input data and other parameters can be made by editing the
-respective YAML file in the program's directory.
+respective YAML file in the program's directory: `FSM_input.yaml` or
+`Turing_input.yaml`.
 
 Run the program with the following command: `python3 FSM.py` or `python3
 Turing.py` and follow the on-screen instructions.
