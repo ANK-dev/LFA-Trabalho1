@@ -20,6 +20,9 @@ class TuringMachine:
         last_state = 0
 
         for row in tm_matrix:
+            # Stringfies 'Present Symbol' and 'Symbol Printed' columns
+            row[1] = str(row[1])
+            row[2] = str(row[2])
 
             # Checks if we're in a new state from the input matrix, copies the
             # symbol dict to the state dict and clears the symbol dict for the
@@ -63,26 +66,26 @@ class TuringMachine:
         """
         Reads input, returns output and processes the next state
         """
-        if input_value == 0 or input_value == 1 or input_value == 'b':
-            if input_value in self.current_state:
-                # Gets output before changing state and writes to tape
-                output = self.current_state[input_value]
-                self.__write_output(output, output_func)
+        # if input_value == 0 or input_value == 1 or input_value == 'b':
+        if input_value in self.current_state:
+            # Gets output before changing state and writes to tape
+            output = self.current_state[input_value]
+            self.__write_output(output, output_func)
 
-                # Gets next state and sets current state to it
-                next_state = self.current_state[input_value]['next_state']
-                self.__set_state(next_state)
+            # Gets next state and sets current state to it
+            next_state = self.current_state[input_value]['next_state']
+            self.__set_state(next_state)
 
-                # Returns previous state output
-                return output
-            else:
-                # Input key doesn't exist in current state's dictionary.
-                # Halt processing
-                print("\nState doesn't exist! Halt!")
-                sys.exit(0)
+            # Returns previous state output
+            return output
         else:
-            # Input is not 0, 1 or blank
-            raise ValueError(input_value)
+            # Input key doesn't exist in current state's dictionary.
+            # Halt processing
+            print("\nState doesn't exist! Halt!")
+            sys.exit(0)
+        # else:
+            # # Input is not 0, 1 or blank
+            # raise ValueError(input_value)
 
 class Tape:
     current_pos = 0
@@ -90,9 +93,9 @@ class Tape:
     data        = []
 
     def __init__(self, input_data, starting_index, length):
-        self.length = length
+        self.length      = length
         self.current_pos = starting_index
-        self.data = ['b'] * self.length
+        self.data        = ['b'] * self.length
         self.__init_data(input_data, starting_index)
 
     def __init_data(self, input_data, starting_index):
@@ -102,10 +105,7 @@ class Tape:
         for pos, element in zip(
             range(self.current_pos, self.length), input_data
         ):
-            # Hack for dealing with digit and strings, might fix later
-            self.data[pos] = (
-                int(element) if str(element).isdigit() else element
-            )
+            self.data[pos] = element
 
     def read_data(self, direction=0):
         """
@@ -189,6 +189,9 @@ def main():
     TM_MATRIX = input_data['TM_MATRIX']
     MAX_ITER  = input_data['MAX_ITER']
 
+    # Debug Settings
+    DEBUG = input_data['DEBUG']
+
     ###########################################################################
 
     print(f"{'*** Turing Machine ***' : ^52}",
@@ -203,7 +206,7 @@ def main():
         print("\nExiting...")
         sys.exit(0)
 
-    # Defines new instances of a Turing Machine and its tape
+    # Defines new instances of a TM and its tape
     my_tm   = TuringMachine(TM_MATRIX)
     my_tape = Tape(TAPE_DATA, TAPE_STARTING_INDEX, TAPE_LENGTH)
 
@@ -211,20 +214,32 @@ def main():
     i       = 0   # Current iteration
 
     # Initial tape state
-    print(f"{i}: {my_tape.get_data()}", end='', flush='true')
+    print(f"{i} (R): {my_tape.get_data()}", end='', flush='true')
 
     # Main loop
     while i < MAX_ITER or MAX_ITER == -1:
         try:
-            i += 1
+            # Calculates the output of the TM
             output = my_tm.execute(
                 my_tape.read_data(new_dir),
                 my_tape.write_data
             )
 
-            time.sleep(0.5)
+            # Debug only
+            if DEBUG: print(output, end='')
+
+            # Sets tape head direction
             new_dir = 1 if output['direction'] == 'R' else -1
-            print(f"\r{i}: {my_tape.get_data(new_dir)}", end='', flush='true')
+
+            # Write current iteration
+            time.sleep(0.5)
+            print(f"\r{i} (W): {my_tape.get_data()}", end='', flush='true')
+
+            # Read next iteration
+            i += 1
+            time.sleep(0.5)
+            print(f"\r{i} (R): {my_tape.get_data(new_dir)}",
+                  end='', flush='true')
         except KeyboardInterrupt:
             print("\nHalting...")
             sys.exit(0)

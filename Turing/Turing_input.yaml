@@ -1,19 +1,23 @@
 --- # Turing.py input data
 
 # Initial tape data
-TAPE_DATA: !!str '000111000'
+TAPE_DATA: !!str '000***000'
 
 # Turing Machine Settings
 # Label: [Present State, Present Symbol, Symbol Printed, Next State, Direction ]
-# Types: [int,           {0,  1, 'b'},   {0,  1, 'b'},   int,        {'L', 'R'}]
+# Types: [int,           char,           char,           int,        {'L', 'R'}]
+
 TM_MATRIX: !!seq [
-  [0,  0,  1,  0,  'R'],
-  [0,  1,  0,  0,  'R'],
-  [0, 'b','b', 1,  'L'],
-  [1,  1,  0,  1,  'L'],
-  [1,  0,  1,  1,  'L'],
-  [1, 'b','b', 0,  'R']
+  [0,  '0', '*',  0,  'R'],
+  [0,  '*', '0',  0,  'R'],
+  [0,  'b', 'b',  1,  'L'],
+  [1,  '*', '0',  1,  'L'],
+  [1,  '0', '*',  1,  'L'],
+  [1,  'b', 'b',  0,  'R']
 ]
 
 # Max number of allowed iterations (-1 for endless)
 MAX_ITER: !!int -1
+
+# Debug mode (on or off)
+DEBUG: !!bool off
