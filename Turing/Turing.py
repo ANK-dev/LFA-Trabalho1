@@ -1,23 +1,25 @@
 import sys, time, yaml
+from typing import Callable, Union, cast
 
 class TuringMachine:
     """
     Defines a Turing Machine (TM)
     """
-    states        = {}
-    current_state = {}
+    states:        dict[int, dict[str, dict[str, Union[int, str]]]] = {}
+    current_state: dict[str, dict[str, Union[int, str]]]            = {}
 
-    def __init__(self, tm_matrix):
+
+    def __init__(self, tm_matrix: list) -> None:
         self.__init_states(tm_matrix)
         self.__set_state(0)
 
-    def __init_states(self, tm_matrix):
+    def __init_states(self, tm_matrix: list) -> None:
         """
         Intializes the Turing Machine's states as a dictionary of dictionaries
         of dictionaries! (Tree-like structure).
         """
-        symbols    = {}
-        last_state = 0
+        symbols:    dict = {}
+        last_state: int  = 0
 
         for row in tm_matrix:
             # Stringfies 'Present Symbol' and 'Symbol Printed' columns
@@ -48,32 +50,45 @@ class TuringMachine:
             # Update last state for the next iteration
             last_state = row[0]
 
-    def __set_state(self, next_state):
+    def __set_state(self, next_state: int) -> None:
         """
         Sets current state to the next state
         """
         self.current_state = self.states[next_state]
 
 
-    def __write_output(self, output, output_func):
+    def __write_output(
+        self,
+        output:      dict[str, Union[int, str]],
+        output_func: Callable[[str], None]
+    ) -> None:
         """
         Writes the current state's output (symbol printed) to tape by calling
         the tape writing function (passed as argument)
         """
-        output_func(output['symbol_printed'])
+        output_func(cast(str, output['symbol_printed']))
 
-    def execute(self, input_value, output_func):
+    def execute(
+        self,
+        input_value: str,
+        output_func: Callable[[str], None]
+    ) -> dict[str, Union[int, str]]:
         """
         Reads input, returns output and processes the next state
         """
-        # if input_value == 0 or input_value == 1 or input_value == 'b':
+        # checks if input exists in current state dict
         if input_value in self.current_state:
+
             # Gets output before changing state and writes to tape
-            output = self.current_state[input_value]
+            output: dict[str, Union[int, str]] = (
+                self.current_state[input_value]
+            )
             self.__write_output(output, output_func)
 
             # Gets next state and sets current state to it
-            next_state = self.current_state[input_value]['next_state']
+            next_state: int = cast(
+                int, self.current_state[input_value]['next_state']
+            )
             self.__set_state(next_state)
 
             # Returns previous state output
@@ -83,22 +98,24 @@ class TuringMachine:
             # Halt processing
             print("\nState doesn't exist! Halt!")
             sys.exit(0)
-        # else:
-            # # Input is not 0, 1 or blank
-            # raise ValueError(input_value)
 
 class Tape:
-    current_pos = 0
-    length      = 0
-    data        = []
+    current_pos: int       = 0
+    length:      int       = 0
+    data:        list[str] = []
 
-    def __init__(self, input_data, starting_index, length):
-        self.length      = length
+    def __init__(
+        self,
+        input_data:     str,
+        starting_index: int,
+        length:         int
+    ) -> None:
         self.current_pos = starting_index
+        self.length      = length
         self.data        = ['b'] * self.length
         self.__init_data(input_data, starting_index)
 
-    def __init_data(self, input_data, starting_index):
+    def __init_data(self, input_data: str, starting_index: int) -> None:
         """
         Initializes tape with input data from a starting index
         """
@@ -107,7 +124,7 @@ class Tape:
         ):
             self.data[pos] = element
 
-    def read_data(self, direction=0):
+    def read_data(self, direction: int = 0) -> str:
         """
         Reads tape data to the left, to the right or at current tape head
         position
@@ -120,42 +137,42 @@ class Tape:
             return self.data[self.current_pos]
         except IndexError:
             # Stop execution if bounds of tape are reached
-            lr_bound = (
+            lr_bound: str = (
                 'Right' if self.current_pos > len(self.data) - 1 else 'Left'
             )
             print(f"\n{lr_bound} bound of tape reached! Halt!")
             sys.exit(1)
 
-    def write_data(self, input_data):
+    def write_data(self, input_data: str) -> None:
         """
         Writes data to tape
         """
         self.data[self.current_pos] = input_data
 
-    def get_data(self, direction=0):
+    def get_data(self, direction: int = 0) -> str:
         """
         Returns formated tape data with tape head overlay
         """
 
         # Tape head characters
-        th_left  = '>'
-        th_right = '<'
+        th_left:  str = '>'
+        th_right: str = '<'
 
-        data_str = self.data.copy()
+        data: list[str] = self.data.copy()
 
         # Keep head in place if direction is past the bounds of the tape
         try:
             # Draw tape head overlay at new index
-            data_str[self.current_pos + direction] = (
-                f"{th_left}{data_str[self.current_pos + direction]}{th_right}"
+            data[self.current_pos + direction] = (
+                f"{th_left}{data[self.current_pos + direction]}{th_right}"
             )
         except IndexError:
-            data_str[self.current_pos] = (
-                f"{th_left}{data_str[self.current_pos]}{th_right}"
+            data[self.current_pos] = (
+                f"{th_left}{data[self.current_pos]}{th_right}"
             )
 
         # Formatting tweaks
-        data_str = str(data_str)    \
+        data_str: str = str(data)   \
             .replace('\'' ,  '')    \
             .replace('['  ,  '[ ')  \
             .replace(']'  ,  ' ]')  \
@@ -167,30 +184,30 @@ class Tape:
 
         return data_str
 
-def main():
+def main() -> None:
     ################################ Settings #################################
 
     # Loads input data from YAML file
     with open('Turing_input.yaml', 'r') as stream:
         try:
-            input_data = yaml.safe_load(stream)
+            input_data: dict = yaml.safe_load(stream)
         except yaml.YAMLError as error:
             print("[ERROR] Error processing YAML file:", error)
             sys.exit(1)
 
     # Tape Settings
-    TAPE_DATA   = input_data['TAPE_DATA']
-    TAPE_LENGTH = len(TAPE_DATA) + 6        # TODO: Change to 70 later!!!
-    TAPE_STARTING_INDEX = (                 # Center data on tape
+    TAPE_DATA:   str = input_data['TAPE_DATA']
+    TAPE_LENGTH: int = len(TAPE_DATA) + 6        # TODO: Change to 70 later!!!
+    TAPE_STARTING_INDEX: int = (                 # Center data on tape
         TAPE_LENGTH - len(TAPE_DATA)
     ) // 2
 
     # Turing Machine Settings
-    TM_MATRIX = input_data['TM_MATRIX']
-    MAX_ITER  = input_data['MAX_ITER']
+    TM_MATRIX: list[list[Union[int, str]]] = input_data['TM_MATRIX']
+    MAX_ITER:  int                         = input_data['MAX_ITER']
 
     # Debug Settings
-    DEBUG = input_data['DEBUG']
+    DEBUG: bool = input_data['DEBUG']
 
     ###########################################################################
 
@@ -207,14 +224,15 @@ def main():
         sys.exit(0)
 
     # Defines new instances of a TM and its tape
-    my_tm   = TuringMachine(TM_MATRIX)
-    my_tape = Tape(TAPE_DATA, TAPE_STARTING_INDEX, TAPE_LENGTH)
+    my_tm:   TuringMachine = TuringMachine(TM_MATRIX)
+    my_tape: Tape          = Tape(TAPE_DATA, TAPE_STARTING_INDEX, TAPE_LENGTH)
 
-    new_dir = 0   # Initial tape head direction
-    i       = 0   # Current iteration
+    new_dir: int = 0                     # Initial tape head direction
+    i:       int = 0                     # Current iteration
+    output:  dict[str, Union[int, str]]  # TM's output
 
     # Initial tape state
-    print(f"{i} (R): {my_tape.get_data()}", end='', flush='true')
+    print(f"{i} (R): {my_tape.get_data()}", end='', flush=True)
 
     # Main loop
     while i < MAX_ITER or MAX_ITER == -1:
@@ -233,13 +251,14 @@ def main():
 
             # Write current iteration
             time.sleep(0.5)
-            print(f"\r{i} (W): {my_tape.get_data()}", end='', flush='true')
+            print(f"\r{i} (W): {my_tape.get_data()}",
+                  end='', flush=True)
 
             # Read next iteration
             i += 1
             time.sleep(0.5)
             print(f"\r{i} (R): {my_tape.get_data(new_dir)}",
-                  end='', flush='true')
+                  end='', flush=True)
         except KeyboardInterrupt:
             print("\nHalting...")
             sys.exit(0)
