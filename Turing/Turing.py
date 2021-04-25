@@ -1,19 +1,24 @@
 import sys, time, yaml
 from typing import Callable, Union, cast
 
+# Typedefs
+output_t        = dict[str, Union[int, str]]
+current_state_t = dict[str, output_t]
+states_t        = dict[int, current_state_t]
+tm_matrix_t     = list[list[Union[int, str]]]
+
 class TuringMachine:
     """
     Defines a Turing Machine (TM)
     """
-    states:        dict[int, dict[str, dict[str, Union[int, str]]]] = {}
-    current_state: dict[str, dict[str, Union[int, str]]]            = {}
+    states:        states_t        = {}
+    current_state: current_state_t = {}
 
-
-    def __init__(self, tm_matrix: list) -> None:
+    def __init__(self, tm_matrix: tm_matrix_t) -> None:
         self.__init_states(tm_matrix)
         self.__set_state(0)
 
-    def __init_states(self, tm_matrix: list) -> None:
+    def __init_states(self, tm_matrix: tm_matrix_t) -> None:
         """
         Intializes the Turing Machine's states as a dictionary of dictionaries
         of dictionaries! (Tree-like structure).
@@ -48,7 +53,7 @@ class TuringMachine:
                 symbols.clear()
 
             # Update last state for the next iteration
-            last_state = row[0]
+            last_state = cast(int, row[0])
 
     def __set_state(self, next_state: int) -> None:
         """
@@ -59,7 +64,7 @@ class TuringMachine:
 
     def __write_output(
         self,
-        output:      dict[str, Union[int, str]],
+        output:      output_t,
         output_func: Callable[[str], None]
     ) -> None:
         """
@@ -72,7 +77,7 @@ class TuringMachine:
         self,
         input_value: str,
         output_func: Callable[[str], None]
-    ) -> dict[str, Union[int, str]]:
+    ) -> output_t:
         """
         Reads input, returns output and processes the next state
         """
@@ -80,9 +85,7 @@ class TuringMachine:
         if input_value in self.current_state:
 
             # Gets output before changing state and writes to tape
-            output: dict[str, Union[int, str]] = (
-                self.current_state[input_value]
-            )
+            output: output_t = self.current_state[input_value]
             self.__write_output(output, output_func)
 
             # Gets next state and sets current state to it
@@ -203,8 +206,8 @@ def main() -> None:
     ) // 2
 
     # Turing Machine Settings
-    TM_MATRIX: list[list[Union[int, str]]] = input_data['TM_MATRIX']
-    MAX_ITER:  int                         = input_data['MAX_ITER']
+    TM_MATRIX: tm_matrix_t = input_data['TM_MATRIX']
+    MAX_ITER:  int         = input_data['MAX_ITER']
 
     # Debug Settings
     DEBUG: bool = input_data['DEBUG']
@@ -227,9 +230,9 @@ def main() -> None:
     my_tm:   TuringMachine = TuringMachine(TM_MATRIX)
     my_tape: Tape          = Tape(TAPE_DATA, TAPE_STARTING_INDEX, TAPE_LENGTH)
 
-    new_dir: int = 0                     # Initial tape head direction
-    i:       int = 0                     # Current iteration
-    output:  dict[str, Union[int, str]]  # TM's output
+    new_dir: int = 0    # Initial tape head direction
+    i:       int = 0    # Current iteration
+    output:  output_t   # TM's output
 
     # Initial tape state
     print(f"{i} (R): {my_tape.get_data()}", end='', flush=True)
