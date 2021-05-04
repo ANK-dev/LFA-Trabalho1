@@ -7,11 +7,30 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 
-\usepackage{graphicx}
-\graphicspath{ {images/} }
+\usepackage{float}         % For positioning images
+\usepackage{graphicx}      % For image support
+\graphicspath{ {images/} } % Store images in a different directory
 
-\usepackage{titlesec}
+\usepackage{titlesec}      % Customize section titles
 \titleformat{\section}{\bf}{\thesection.}{5pt}{\bf}
+\titleformat{\subsection}{\bf}{\thesubsection.}{5pt}{\bf}
+
+\usepackage{indentfirst}   % Add first line indent
+\usepackage{booktabs}      % Table decoration
+
+% Table Hacks
+% https://tex.stackexchange.com
+% /questions/192842/multiple-columns-in-table-problem-with-alignment
+\usepackage{array}
+\newcolumntype{L}[1]{
+    >{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}
+}
+\newcolumntype{C}[1]{
+    >{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}
+}
+\newcolumntype{R}[1]{
+    >{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}
+}
 
 \author{Ariel Nogueira Kovaljski}
 \title{Trabalho de Linguagens Formais e Autômatos}
