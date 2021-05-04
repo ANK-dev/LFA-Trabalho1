@@ -1,10 +1,8 @@
-\section{Desenvolvimento}
-
-Iremos nos aprofundar no desenvolvimento destes autômatos. <expandir>
+\section{Teoria}
 
 \subsection{Máquina de Estado Finito}
 
-<falar sobre memória>
+<falar sobre gramática>
 
 Uma máquina de estado finito (MEF) pode ser considerada como um modelo
 simplificado do funcionamento de um computador. Esta pode ser definida como uma
@@ -21,14 +19,15 @@ quíntupla ordenada $M = (S, I, O, f_S, f_O)$ onde:
 \end{itemize}
 
 As operações da MEF são sincronizadas por pulsos discretos de um relógio
-(\emph{clock}) representados por $t_k$, onde $k \in \mathbb{N}_0$ representa o
+(\textit{clock}) representados por $t_k$, onde $k \in \mathbb{N}_0$ representa o
 ciclo de \textit{clock} atual. Partindo de um estado inicial $s_0 = s_{t_0}$,
 após um pulso de \textit{clock}, a função $f_S$ retornará um novo estado
 $s_{t_1}$ dado a entrada anterior $i_{t_0}$ e o estado anterior $s_0$.
 Generalizando para qualquer pulso de \textit{clock}, é possível afirmar que a
 MEF possui um comportamento determinístico, ou seja, o novo estado sempre
-dependará do estado e entrada anteriores. Para cada um dos estados, há um
-símbolo de saída, que é retornado pela função \textit{output} $f_O$.
+dependará do estado e entrada anteriores. Cada estado funciona como uma memória
+dos \textit{inputs} anteriores, além de possuir um símbolo de saída, que é
+retornado pela função \textit{output} $f_O$.
 
 \begin{figure}[H]
     \centering
@@ -56,20 +55,57 @@ tabela, com o estado atual, possíveis entradas e saídas como colunas da mesma.
     % Use `L{width}', `C{width}' or `R{width}' for column alignment
     \begin{tabular}{ c C{1cm} C{1cm} c }
         \toprule
-        Estado Atual & \multicolumn{2}{c}{Próximo Estado} & Saída  \\
-                     & \textbf{0} & \textbf{1} &                   \\
+        Estado Atual & \multicolumn{2}{c}{Próximo Estado} & Saída      \\
+                     & \textbf{0} & \textbf{1}            &            \\
         \hline
-        $s_0$        & $s_0$      & $s_1$      & \textbf{0}        \\
-        $s_1$        & $s_0$      & $s_2$      & \textbf{0}        \\
-        $s_2$        & $s_0$      & $s_2$      & \textbf{1}        \\
+        $s_0$        & $s_0$      & $s_1$                 & \textbf{0} \\
+        $s_1$        & $s_0$      & $s_2$                 & \textbf{0} \\
+        $s_2$        & $s_0$      & $s_2$                 & \textbf{1} \\
         \bottomrule
     \end{tabular}
 \end{center}
 
 Nota-se que dentre todas as possíveis entradas, esta MEF só aceitará, isto é,
-terminará no estado final $s_2$, para \emph{strings} de entrada que terminem
+terminará no estado final $s_2$, para \textit{strings} de entrada que terminem
 com dois ou mais \textbf{1} (\textbf{11}, \textbf{111}, \textbf{1111}, \ldots).
 
 \subsection{Máquina de Turing}
 
-<expandir>
+Máquinas de estado finito são capazes de processar apenas gramáticas do tipo 3:
+``gramática regular''. Sendo assim é necessário o uso de outros tipos de
+autômatos para o processamento de gramáticas do tipo 2, 1 e 0: ``livre de
+contexto'', ``sensível ao contexto'' e ``recursivamente enumerável'',
+respectivamente.
+
+Segundo a hierarquia de Chomsky, cada nível de gramática é um superconjunto da
+gramática anterior. Sendo assim, a gramática mais geral, a ``recursivamente
+enumerável'' com o seu respectivo autômato, a máquina de Turing, é capaz de
+representar e processar linguagens formais de qualquer outro nível de gramática.
+
+A máquina de Turing (MT) é o modelo mais geral do funcionamento de um
+computador. Considera-se uma fita de comprimento infinito que armazena os dados
+de entrada da MT. Cada dado ocupa uma célula da fita. Anexado a esta fita, há
+um cabeçote, que pode ler e escrever dados da fita sob a posição em que se
+encontra. Este pode mover-se para a esquerda e para direita apenas uma célula
+por vez. O cabeçote serve como dispositivo de entrada/saída da MT.
+
+Para um conjunto finito de estados $S$ e para um conjunto finito de
+símbolos da fita (alfabeto da fita) $I$, define-se uma MT como uma quíntupla
+ordenada $T = (s, i, i', s', d)$ onde:
+\begin{itemize}
+    \item $s \in S$ é o estado da MT;
+    \item $i \in I$ é um símbolo de entrada;
+    \item $i' \in I$ é um símbolo de saída;
+    \item $s' \in S$ é o novo estado da MT;
+    \item $d \in \{L,R\}$ é direção de movimento do cabeçote.
+\end{itemize}
+
+Para cada dado $i$ lido pela MT, dado o estado atual $s$, resultará em uma
+saída $i'$, um novo estado $s'$ e uma direção de movimento do cabeçote $d$.
+Nota-se que exceto pelo componente $d$, a MT é indêntica a MEF, mas devido a
+fita com capacidade de memória infinita e a possibilidade de ler e escrever e
+reler os dados da própria fita, faz com que a MT seja de processar gramáticas
+que seriam impossíveis em uma MEF.
+
+\section{Desenvolvimento}
+
