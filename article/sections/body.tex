@@ -2,11 +2,13 @@
 
 \subsection{Máquina de Estado Finito}
 
-<falar sobre gramática>
+Máquinas de estado finito (MEF) são o tipo mais simples e restrito de autômato,
+capazes apenas de processar linguagens do tipo 3: ``gramática regular'',
+geradas por expressões regulares.
 
-Uma máquina de estado finito (MEF) pode ser considerada como um modelo
-simplificado do funcionamento de um computador. Esta pode ser definida como uma
-quíntupla ordenada $M = (S, I, O, f_S, f_O)$ onde:
+Uma MEF pode ser considerada como um modelo simplificado do funcionamento de um
+computador. Esta pode ser definida como uma quíntupla ordenada $M = (S, I, O,
+f_S, f_O)$ onde:
 \begin{itemize}
     \item $S$ é o conjunto finito de estados;
     \item $I$ é o conjunto finito de símbolos de entrada (alfabeto de entrada);
@@ -32,6 +34,7 @@ retornado pela função \textit{output} $f_O$.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{fsm}
+    \label{fsm}
     \caption{Exemplo de máquina de estado finito}
 \end{figure}
 
@@ -77,21 +80,30 @@ autômatos para o processamento de gramáticas do tipo 2, 1 e 0: ``livre de
 contexto'', ``sensível ao contexto'' e ``recursivamente enumerável'',
 respectivamente.
 
-Segundo a hierarquia de Chomsky, cada nível de gramática é um superconjunto da
+Segundo a hierarquia de Chomsky, cada classe de gramática é um superconjunto da
 gramática anterior. Sendo assim, a gramática mais geral, a ``recursivamente
 enumerável'' com o seu respectivo autômato, a máquina de Turing, é capaz de
-representar e processar linguagens formais de qualquer outro nível de gramática.
+representar e processar linguagens formais de qualquer outra classe.
 
-A máquina de Turing (MT) é o modelo mais geral do funcionamento de um
+A máquina de Turing (MT), criada por Alan Turing \cite{turing}, é o modelo mais
+geral do
+funcionamento de um
 computador. Considera-se uma fita de comprimento infinito que armazena os dados
-de entrada da MT. Cada dado ocupa uma célula da fita. Anexado a esta fita, há
+de entrada da MT. Cada dado ocupa uma posição da fita. Anexado a esta fita, há
 um cabeçote, que pode ler e escrever dados da fita sob a posição em que se
-encontra. Este pode mover-se para a esquerda e para direita apenas uma célula
+encontra. Este pode mover-se para a esquerda e para direita apenas uma posição
 por vez. O cabeçote serve como dispositivo de entrada/saída da MT.
 
-Para um conjunto finito de estados $S$ e para um conjunto finito de
-símbolos da fita (alfabeto da fita) $I$, define-se uma MT como uma quíntupla
-ordenada $T = (s, i, i', s', d)$ onde:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{tm}
+    \label{tm}
+    \caption{Elementos da máquina de Turing}
+\end{figure}
+
+Para um conjunto finito de estados $S$ e para um conjunto finito de símbolos da
+fita (alfabeto da fita) $I$, define-se uma MT como uma quíntupla ordenada $T =
+(s, i, i', s', d)$ onde:
 \begin{itemize}
     \item $s \in S$ é o estado da MT;
     \item $i \in I$ é um símbolo de entrada;
@@ -102,10 +114,120 @@ ordenada $T = (s, i, i', s', d)$ onde:
 
 Para cada dado $i$ lido pela MT, dado o estado atual $s$, resultará em uma
 saída $i'$, um novo estado $s'$ e uma direção de movimento do cabeçote $d$.
-Nota-se que exceto pelo componente $d$, a MT é indêntica a MEF, mas devido a
+Nota-se que exceto pelo componente $d$, a MT é idêntica a MEF, mas devido a
 fita com capacidade de memória infinita e a possibilidade de ler e escrever e
 reler os dados da própria fita, faz com que a MT seja de processar gramáticas
 que seriam impossíveis em uma MEF.
 
 \section{Desenvolvimento}
 
+Tendo a teoria como base, foi possível escrever uma implementação computacional
+destes autômatos. A linguagem escolhida foi \textit{Python}, pois sua
+orientação a objetos e simplicidade de sintaxe permitiu uma modelagem do
+problema de forma mais direta, rápida e eficiente.
+
+\subsection{Máquina de Estado Finito}
+
+A máquina de estado finito foi implementada como uma classe (\verb|FSM|), onde
+seus estados estão armazenados em uma lista, e cada estado nesta lista é um
+dicionário com chaves correspondentes ao próprio estado (\verb|state|),
+próximo estado se o \textit{input} for \textbf{0} (\verb|next0|), próximo
+estado se o \textit{input} for \textbf{1} (\verb|next1|) e ao \textit{output}
+(\verb|output|), nesta ordem. Esta abordagem foi tomada para facilidade de
+interpretação do código; ao invés de utilizar apenas índices, o uso das chaves
+nomeadas torna o funcionamento mais explícito.
+
+Esta lista de dicionários é preenchida a partir da leitura de um arquivo
+\verb|.yaml|, onde o usuário pode configurar os estados da MEF.
+
+Ao iniciar o programa, o mesmo realiza a inicialização de uma instância da MEF,
+e em seguida pede ao usuário a inserção de um \textit{string} de entrada. Ao
+pressionar \keys{\return}, esta \textit{string} é processada pela MEF, e, para
+cada símbolo de entrada, o estado interno é atualizado, e o símbolo de saída
+correspondente é impresso no console. Após todos os símbolos terem sido
+processados, o programa solicita ao usuário uma nova \textit{string} de entrada.
+Para encerrar a execução do programa, o usuário pode usar o atalho de teclado
+\keys{\ctrl+C} ou \keys{\ctrl+D}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fsm_run}
+    \label{fsm_run}
+    \caption{Execução da máquina de estado finito}
+\end{figure}
+
+Caso uma \textit{string} contenha símbolos diferentes de \textbf{0} ou
+\textbf{1}, uma mensagem de erro é mostrada e o programa encerra sua execução.
+
+\subsection{Máquina de Turing}
+
+A máquina de Turing foi implementada como duas classes: uma para a lógica do
+programa (\verb|TuringMachine|), e a outra para a fita (\verb|Tape|).
+
+Na classe \verb|TuringMachine|, as quíntuplas da MT, são armazenadas em um
+dicionário, onde cada elemento do dicionário corresponde a um estado, cada
+estado é um dicionário que contém os símbolos de entrada, e cada símbolo de
+entrada é um dicionário que contém a própria quíntupla, isto é, estado atual
+(\verb|present_state|), símbolo de entrada (\verb|present_symbol|), símbolo de
+saída \linebreak (\verb|symbol_printed|), direção (\verb|direction|) e o próximo
+estado (\verb|next_state|).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{tm_logic}
+    \label{tm_logic}
+    \caption{Lógica de funcionamento da máquina de Turing}
+\end{figure}
+
+A essência do funcionamento da MT é apresentada na figura acima, onde, para um
+dado estado, dependendo do símbolo de \textit{input}, pode-se ter diferentes
+símbolos de \textit{output}, direções e próximos estados.
+
+Na classe \verb|Tape|, a fita é implementada como uma lista de comprimento 70,
+que será preenchida com a \textit{string} de entrada.
+
+Tanto o dicionário de quíntuplas quanto os dados de entrada da fita são
+preenchidos a partir da leitura de um arquivo \verb|.yaml|, onde o usuário pode
+configurar os parâmetros da MT.
+
+Ao iniciar o programa, o mesmo realiza a inicialização de instâncias da MT e da
+fita, e exibe no console uma mensagem de confirmação: caso o usuário pressione
+\keys{\enter}, a execução da MT é iniciada, caso o usuário pressione
+\linebreak \keys{\ctrl+C} ou \keys{\ctrl+D}, o programa é encerrado. Partindo do
+pressuposto que o usuário decidiu iniciar a execução, o programa irá mostrar no
+console uma representação visual da fita, os dados nela presentes, e do cabeçote
+de leitura e escrita.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{tm_run}
+    \label{tm_run}
+    \caption{Execução da máquina de Turing}
+\end{figure}
+
+Os seguintes elementos podem ser vistos nesta imagem:
+
+\begin{enumerate}
+    \item Iteração atual;
+    \item Ação atual do cabeçote (Leitura (\verb|R|) ou Escrita (\verb|W|));
+    \item Fita e seu conteúdo;
+    \item Posição atual do cabeçote (representado pelo par \verb|> <|).
+\end{enumerate}
+
+A cada iteração o cabeçote realiza uma etapa de leitura e uma etapa de escrita.
+Durante a leitura, o símbolo lido é comparado com os símbolos de \textit{input}
+para aquele estado. Em seguida, o símbolo de \textit{output} é escrito, a MT
+assume o novo estado, e o cabeçote se move em uma nova direção. Caso o próximo
+estado não exista, ou o símbolo de entrada não consta dentre os \textit{inputs}
+do estado atual, o programa encerrará a sua execução.
+
+Devido a impossibilidade de se determinar para quais conjuntos de entradas e
+quíntuplas a MT irá concluir sua execução ou ficará em um \textit{loop} infinito
+(Halting Problem \cite{turing}), é possível estabelecer um número máximo de
+iterações para a MT através de um parâmetro no arquivo \verb|.yaml|. Caso o
+usuário deseje, este também pode parar a execução do programa a qualquer
+momento, pressionando \linebreak \keys{\ctrl+C}.
+
+Devido aos limites físicos de um computador real em relação à MT teórica, no
+caso, memória finita, caso o cabeçote passe dos limites da fita (estabelecido
+como 70), a execução do programa será encerrada.
