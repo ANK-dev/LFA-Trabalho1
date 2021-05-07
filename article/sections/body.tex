@@ -34,17 +34,17 @@ retornado pela função \textit{output} $f_O$.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{fsm}
-    \label{fsm}
     \caption{Exemplo de máquina de estado finito}
+    \label{fig:fsm}
 \end{figure}
 
 Tomando como exemplo a MEF acima, começamos no estado $s_0$ e temos como saída o
 símbolo \textbf{0}. Aqui, há duas possibilidades: enquanto a entrada for
 \textbf{0}, permanecemos neste estado; caso a entrada seja \textbf{1}, seguimos
-para o estado $s_1$. Ao seguirmos para o estado $s_1$ temos como saída o símbolo
-\textbf{0}. Novamente, há duas possíveis entradas: caso a entrada seja
+para o estado $s_1$. Ao seguirmos para o estado $s_1$, temos como saída o
+símbolo \textbf{0}. Novamente, há duas possíveis entradas: caso a entrada seja
 \textbf{0}, retornamos ao estado $s_0$; caso a entrada seja \textbf{1}, seguimos
-para o estado $s_2$. Por fim, ao seguirmos para o estado $s_2$ temos como saída
+para o estado $s_2$. Por fim, ao seguirmos para o estado $s_2$, temos como saída
 o símbolo \textbf{1}. As alternativas são: caso a entrada seja \textbf{0},
 retornarmos ao estado $s_0$; enquanto a entrada seja \textbf{1}, permanecemos
 neste estado.
@@ -52,10 +52,11 @@ neste estado.
 Esta forma um tanto verbosa de se descrever uma MEF pode ser colocada em uma
 tabela, com o estado atual, possíveis entradas e saídas como colunas da mesma.
 
-\begin{center}
+\begin{table}[H]
     % https://tex.stackexchange.com
     % /questions/192842/multiple-columns-in-table-problem-with-alignment
     % Use `L{width}', `C{width}' or `R{width}' for column alignment
+    \centering
     \begin{tabular}{ c C{1cm} C{1cm} c }
         \toprule
         Estado Atual & \multicolumn{2}{c}{Próximo Estado} & Saída      \\
@@ -66,7 +67,9 @@ tabela, com o estado atual, possíveis entradas e saídas como colunas da mesma.
         $s_2$        & $s_0$      & $s_2$                 & \textbf{1} \\
         \bottomrule
     \end{tabular}
-\end{center}
+    \caption{Tabela de estados da MEF representada na Fig.\ \ref{fig:fsm}}
+    \label{tab:fsm}
+\end{table}
 
 Nota-se que dentre todas as possíveis entradas, esta MEF só aceitará, isto é,
 terminará no estado final $s_2$, para \textit{strings} de entrada que terminem
@@ -97,8 +100,8 @@ por vez. O cabeçote serve como dispositivo de entrada/saída da MT.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{tm}
-    \label{tm}
     \caption{Elementos da máquina de Turing}
+    \label{fig:tm}
 \end{figure}
 
 Para um conjunto finito de estados $S$ e para um conjunto finito de símbolos da
@@ -152,8 +155,8 @@ Para encerrar a execução do programa, o usuário pode usar o atalho de teclado
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{fsm_run}
-    \label{fsm_run}
     \caption{Execução da máquina de estado finito}
+    \label{fig:fsm_run}
 \end{figure}
 
 Caso uma \textit{string} contenha símbolos diferentes de \textbf{0} ou
@@ -175,8 +178,8 @@ estado (\verb|next_state|).
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{tm_logic}
-    \label{tm_logic}
     \caption{Lógica de funcionamento da máquina de Turing}
+    \label{fig:tm_logic}
 \end{figure}
 
 A essência do funcionamento da MT é apresentada na figura acima, onde, para um
@@ -201,8 +204,8 @@ de leitura e escrita.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{tm_run}
-    \label{tm_run}
     \caption{Execução da máquina de Turing}
+    \label{fig:tm_run}
 \end{figure}
 
 Os seguintes elementos podem ser vistos nesta imagem:
@@ -228,6 +231,244 @@ iterações para a MT através de um parâmetro no arquivo \verb|.yaml|. Caso o
 usuário deseje, este também pode parar a execução do programa a qualquer
 momento, pressionando \linebreak \keys{\ctrl+C}.
 
-Devido aos limites físicos de um computador real em relação à MT teórica, no
-caso, memória finita, caso o cabeçote passe dos limites da fita (estabelecido
+Devido aos limites físicos de um computador real em relação à MT teórica --- no
+caso, memória finita --- caso o cabeçote passe dos limites da fita (estabelecido
 como 70), a execução do programa será encerrada.
+
+\section{Resultados}
+
+Com o desenvolvimento do código concluído, testes foram realizados para
+verificar a acurácia das soluções obtidas.
+
+\subsection{Máquina de Estado Finito}
+
+Os testes foram realizados a partir de exemplos extraídos do livro
+\cite[cap.\ 9.3]{judith}.
+
+\subsubsection*{p.\ 730, Example 29:}
+
+\begin{table}[H]
+    % https://tex.stackexchange.com
+    % /questions/192842/multiple-columns-in-table-problem-with-alignment
+    % Use `L{width}', `C{width}' or `R{width}' for column alignment
+    \centering
+    \begin{tabular}{ c C{1cm} C{1cm} c }
+        \toprule
+        Estado Atual & \multicolumn{2}{c}{Próximo Estado} & Saída      \\
+        & \textbf{0} & \textbf{1}            &            \\
+        \hline
+        $s_0$        & $s_1$      & $s_0$                 & \textbf{0} \\
+        $s_1$        & $s_2$      & $s_1$                 & \textbf{1} \\
+        $s_2$        & $s_2$      & $s_0$                 & \textbf{1} \\
+        \bottomrule
+    \end{tabular}
+    \caption{\cite[p.\ 730, Example 29 --- Table 9.1]{judith}}
+    \label{tab:fsm_chap9.3_ex29}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{fsm_chap9.3_ex29}
+    \caption{
+        \textit{Output} da MEF definida na Tabela \ref{tab:fsm_chap9.3_ex29}
+        para o \textit{input} proposto pelo ``Example 29''
+    }
+    \label{fig:fsm_chap9.3_ex29}
+\end{figure}
+
+\subsubsection*{p.\ 731, Practice 43:}
+
+``For the machine \textit{M} of Example 29, what output sequence is produced by
+the input sequence 11001?''
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{fsm_chap9.3_prac43}
+    \caption{
+        \textit{Output} da MEF definida na Tabela \ref{tab:fsm_chap9.3_ex29}
+        para o \textit{input} proposto pela questão ``Practice 43''
+    }
+    \label{fig:fsm_chap9.3_prac43}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+    \hrule
+    <Inserir mais exemplos>
+    \hrule
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Máquina de Turing}
+
+Os testes foram realizados a partir de exemplos extraídos do livro
+\cite[cap.\ 9.4]{judith}, exceto quando indicado.
+
+\subsubsection*{p.\ 762, Example 40:}
+
+% Side-by-side
+\begin{table}[H]
+    \begin{minipage}{0.666\linewidth}
+
+        \begin{minipage}{.5\linewidth}
+            Quíntuplas da máquina:
+        \end{minipage}% <-- This comment fixes aligment, do not remove
+        \begin{minipage}{.5\linewidth}
+            \begin{flushleft}
+                \ttfamily
+                (0, 0, 1, 0, R) \\
+                (0, 1, 0, 0, R) \\
+                (0, b, 1, 1, L) \\
+                (1, 0, 0, 1, R) \\
+                (1, 1, 0, 1, R)
+            \end{flushleft}
+        \end{minipage}
+
+    \end{minipage}% <------ This comment fixes aligment, do not remove
+    \begin{minipage}{0.333\linewidth}
+
+        \textit{String} de entrada: \textbf{0110}
+
+    \end{minipage}
+
+    \caption{\cite[p.\ 762, Example 40]{judith}}
+    \label{tab:tm_chap9.4_ex40}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{tm_chap9.4_ex40}
+    \caption{
+        Estado final da fita após a finalização da execução da MT definida na
+        Tabela \ref{tab:tm_chap9.4_ex40}
+    }
+    \label{fig:tm_chap9.4_ex40}
+\end{figure}
+
+\subsubsection*{p.\ 764, Practice 57:}
+
+% Side-by-side
+\begin{table}[H]
+    \begin{minipage}{.5\linewidth}
+        \begin{flushright}
+            Quíntuplas da máquina:\hspace*{2ex}    % Add unremovable space @ EOL
+        \end{flushright}
+    \end{minipage}% <-- This comment fixes aligment, do not remove
+    \begin{minipage}{.5\linewidth}
+        \begin{flushleft}
+            \ttfamily
+            (0, 0, 0, 1, R) \\
+            (0, 1, 0, 0, R) \\
+            (0, b, b, 0, R) \\
+            (1, 0, 1, 0, R) \\
+            (1, 1, 1, 0, L)
+        \end{flushleft}
+    \end{minipage}
+
+    \caption{\cite[p.\ 764, Practice 57]{judith}}
+    \label{tab:tm_chap9.4_prac57}
+\end{table}
+
+\begin{enumerate}[a.]
+    \item \textit{String} de entrada: \textbf{10}
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{tm_chap9.4_prac57a}
+    \caption{
+        Estado final da fita após a finalização da execução da MT definida na
+        Tabela \ref{tab:tm_chap9.4_prac57} para o \textit{input} \textbf{10}
+    }
+    \label{fig:tm_chap9.4_prac57a}
+\end{figure}
+
+\begin{enumerate}[resume*]
+    \item \textit{String} de entrada: \textbf{01}
+\end{enumerate}
+
+Para esta \textit{string} de entrada, a máquina fica presa em um \textit{loop},
+sendo necessário a parada manual de sua execução (\keys{\ctrl+C}). Mesmo assim,
+a fita alcança um estado final, após o qual os seus dados não são mais
+alterados.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{tm_chap9.4_prac57b}
+    \caption{
+        Estado da final fita após parada manual da execução da MT definida na
+        Tabela \ref{tab:tm_chap9.4_prac57} para o \textit{input} \textbf{01}
+    }
+    \label{fig:tm_chap9.4_prac57b}
+\end{figure}
+
+\begin{enumerate}[resume*]
+    \item \textit{String} de entrada: \textbf{00}
+\end{enumerate}
+
+Para esta \textit{string} de entrada, o cabeçote começa a se mover para a
+direita sem fim. Devido aos limites físicos da fita previamente estabelecidos,
+ao alcançar a extremidade direita, a execução é abortada. Apesar disso, após
+certo ponto, os dados da fita não são alterados.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{tm_chap9.4_prac57c}
+    \caption{
+        Estado da final fita após parada da execução da MT definida na
+        Tabela \ref{tab:tm_chap9.4_prac57} ao ultrapassar a extremidade direita
+        para o \textit{input} \textbf{00}
+    }
+    \label{fig:tm_chap9.4_prac57c}
+\end{figure}
+
+\subsubsection*{Exemplo Próprio}
+
+Para demonstrar mais uma peculiaridade no funcionamento de uma MT, abaixo segue
+um esquema próprio.
+
+% Side-by-side
+\begin{table}[H]
+    \begin{minipage}{0.6\linewidth}
+
+        \begin{minipage}{0.55\linewidth}
+            Quíntuplas da máquina:
+        \end{minipage}% <-- This comment fixes aligment, do not remove
+        \begin{minipage}{0.45\linewidth}
+            \begin{flushleft}
+                \ttfamily
+                (0, 0, 1, 0, R) \\
+                (0, 1, 0, 0, R) \\
+                (0, b, b, 1, L) \\
+                (1, 1, 0, 1, L) \\
+                (1, 0, 1, 1, L) \\
+                (1, b, b, 0, R)
+            \end{flushleft}
+        \end{minipage}
+
+    \end{minipage}% <------ This comment fixes aligment, do not remove
+    \begin{minipage}{0.4\linewidth}
+
+        \textit{String} de entrada: \textbf{000111000}
+
+    \end{minipage}
+
+    \caption{Exemplo Próprio de MT}
+    \label{tab:tm_own_ex}
+\end{table}
+
+Para a MT acima, o seu comportamento independe da string de entrada. Dado que
+não seja vazia (\textbf{b}), a mesma ficará presa em um \textit{loop} infinito,
+reescrevendo \textbf{0} em \textbf{1} e \textbf{1} em \textbf{0}, até alcançar
+um \textbf{b}; após esse ponto, a mesma reverte a direção e desfaz as
+alterações. Ao alcançar outro \textbf{b}, ela novamente reverte de direção e
+o processo se repete.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{tm_own_ex_50i}
+    \caption{
+        Estado da fita após parada da execução da MT definida na
+        Tabela \ref{tab:tm_own_ex} ao alcançar um número máximo de iterações
+        (50) para o \textit{input} \textbf{000111000}
+    }
+    \label{fig:tm_own_ex_50i}
+\end{figure}

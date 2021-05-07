@@ -17,7 +17,7 @@ TM_MATRIX: !!seq [
 ]
 
 # Max number of allowed iterations (-1 for endless)
-MAX_ITER: !!int -1
+MAX_ITER: !!int 50
 
 # Debug mode (on or off)
 DEBUG: !!bool off
