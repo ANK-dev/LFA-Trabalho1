@@ -84,19 +84,42 @@ def main() -> None:
            "",
           sep='\n')
 
+
     while True:
         try:
             # Reset to initial state after each execution
-            my_fsm: FSM = FSM(STATE_MATRIX)
+            my_fsm:     FSM       = FSM(STATE_MATRIX)
+            states_seq: list[str] = ['s0']
+            output_str: str       = ''
 
-            input_string: str = input("Input:  ")
+            input_string: str = input("Insert input string: ")
 
-            print("Output: ", end='')
-            print(my_fsm.write_output(), end='')
+            output_str += str(my_fsm.write_output())
             for value in input_string:
                 my_fsm.read_input(value)
-                print(my_fsm.write_output(), end='')
-            print("\n")
+                states_seq.append('s' + str(my_fsm.current_state['state']))
+                output_str += str(my_fsm.write_output())
+
+            print()         # 1 newline
+            if len(input_string) < 15:
+                # Full formatting
+                print("Input string:",    ' ' *  6, (' ' * 5).join(input_string))
+                print("States sequence:", ' ' *  0, states_seq)
+                print("Output string:",   ' ' *  5, (' ' * 5).join(output_str))
+                print('-' * 33)
+                print("Final state:",     ' ' *  6, states_seq[-1])
+                print("Final output:",    ' ' *  6, output_str[-1],
+                      "(accepted)" if output_str[-1] == '1' else "(rejected)")
+            else:
+                # Short formatting
+                print("Input:",           ' ' *  0, input_string)
+                print("States sequence:", ' ' *  0, states_seq)
+                print("Output:",          ' ' *  0, output_str)
+                print('-' * 27)
+                print("Final state:",     ' ' *  0, states_seq[-1])
+                print("Final output:",    ' ' *  0, output_str[-1],
+                      "(accepted)" if output_str[-1] == '1' else "(rejected)")
+            print('\n')     # 2 newlines
 
         except (KeyboardInterrupt, EOFError):
             print("\nExiting...")

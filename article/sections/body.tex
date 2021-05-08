@@ -248,23 +248,31 @@ Os testes foram realizados a partir de exemplos extraídos do livro
 \subsubsection*{p.\ 730, Example 29:}
 
 \begin{table}[H]
-    % https://tex.stackexchange.com
-    % /questions/192842/multiple-columns-in-table-problem-with-alignment
-    % Use `L{width}', `C{width}' or `R{width}' for column alignment
-    \centering
-    \begin{tabular}{ c C{1cm} C{1cm} c }
-        \toprule
-        Estado Atual & \multicolumn{2}{c}{Próximo Estado} & Saída      \\
-        & \textbf{0} & \textbf{1}            &            \\
-        \hline
-        $s_0$        & $s_1$      & $s_0$                 & \textbf{0} \\
-        $s_1$        & $s_2$      & $s_1$                 & \textbf{1} \\
-        $s_2$        & $s_2$      & $s_0$                 & \textbf{1} \\
-        \bottomrule
-    \end{tabular}
-    \caption{\cite[p.\ 730, Example 29 --- Table 9.1]{judith}}
+    \begin{minipage}{0.5\linewidth}
+        % https://tex.stackexchange.com
+        % /questions/192842/multiple-columns-in-table-problem-with-alignment
+        % Use `L{width}', `C{width}' or `R{width}' for column alignment
+        \begin{tabular}{ c C{1cm} C{1cm} c }
+            \toprule
+            Estado Atual & \multicolumn{2}{c}{Próximo Estado} & Saída      \\
+                         & \textbf{0} & \textbf{1}            &            \\
+            \hline
+            $s_0$        & $s_1$      & $s_0$                 & \textbf{0} \\
+            $s_1$        & $s_2$      & $s_1$                 & \textbf{1} \\
+            $s_2$        & $s_2$      & $s_0$                 & \textbf{1} \\
+            \bottomrule
+        \end{tabular}
+    \end{minipage}% <-- This comment fixes aligment, do not remove
+    \begin{minipage}{0.5\linewidth}
+        \begin{flushright}
+            \textit{String} de entrada: \textbf{01101}
+        \end{flushright}
+    \end{minipage}
+    \caption{\cite[p.\ 730, Example 29]{judith}}
     \label{tab:fsm_chap9.3_ex29}
 \end{table}
+
+Para a MEF acima e este \textit{input}, temos a seguinte saída:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{fsm_chap9.3_ex29}
@@ -279,6 +287,8 @@ Os testes foram realizados a partir de exemplos extraídos do livro
 
 ``For the machine \textit{M} of Example 29, what output sequence is produced by
 the input sequence 11001?''
+
+Dado esta entrada, temos a seguinte saída:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{fsm_chap9.3_prac43}
@@ -289,13 +299,101 @@ the input sequence 11001?''
     \label{fig:fsm_chap9.3_prac43}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{center}
-    \hrule
-    <Inserir mais exemplos>
-    \hrule
-\end{center}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection*{p.\ 735, Practice 49}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fsm_chap9.3_prac49}
+    \caption{\cite[p.\ 735, Practice 49]{judith}}
+    \label{fig:fsm_chap9.3_prac49}
+\end{figure}
+
+Dado este conjunto de MEFs, cada uma é responsável pelo reconhecimento de uma
+expressão regular:
+
+\begin{multicols}{4}
+    \begin{enumerate}[(a)]
+        \item 0
+        \item 0*10
+        \item 0 $\lor$ 1
+        \item (11)*
+    \end{enumerate}
+\end{multicols}
+
+\noindent
+Verifica-se, então estes conjuntos são de fato reconhecidos por estas MEFs.
+
+\begin{table}[H]
+    \begin{minipage}[b]{0.5\linewidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\textwidth]{fsm_chap9.3_prac49a_acc}
+            \caption{(a) aceito}
+            \label{fig:fsm_chap9.3_prac49a_acc}
+        \end{figure}
+    \end{minipage}% <-- This comment fixes aligment, do not remove
+    \begin{minipage}[b]{0.5\linewidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\textwidth]{fsm_chap9.3_prac49a_rej}
+            \caption{(a) rejeitado}
+            \label{fig:fsm_chap9.3_prac49a_rej}
+        \end{figure}
+    \end{minipage}
+    \newline
+    \begin{minipage}[b]{0.5\linewidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.9\textwidth]{fsm_chap9.3_prac49b_acc}
+            \caption{(b) aceito}
+            \label{fig:fsm_chap9.3_prac49b_acc}
+        \end{figure}
+    \end{minipage}% <-- This comment fixes aligment, do not remove
+    \begin{minipage}[b]{0.5\linewidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.9\textwidth]{fsm_chap9.3_prac49b_rej}
+            \caption{(b) rejeitado}
+            \label{fig:fsm_chap9.3_prac49b_rej}
+        \end{figure}
+    \end{minipage}
+\end{table}
+
+\begin{table}[H]
+    \begin{minipage}[b]{0.5\linewidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\textwidth]{fsm_chap9.3_prac49c_acc}
+            \caption{(c) aceito}
+            \label{fig:fsm_chap9.3_prac49c_acc}
+        \end{figure}
+    \end{minipage}% <-- This comment fixes aligment, do not remove
+    \begin{minipage}[b]{0.5\linewidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\textwidth]{fsm_chap9.3_prac49c_rej}
+            \caption{(c) rejeitado}
+            \label{fig:fsm_chap9.3_prac49c_rej}
+        \end{figure}
+    \end{minipage}
+    \newline
+    \begin{minipage}[b]{0.5\linewidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.9\textwidth]{fsm_chap9.3_prac49d_acc}
+            \caption{(d) aceito}
+            \label{fig:fsm_chap9.3_prac49d_acc}
+        \end{figure}
+    \end{minipage}% <-- This comment fixes aligment, do not remove
+    \begin{minipage}[b]{0.5\linewidth}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.9\textwidth]{fsm_chap9.3_prac49d_rej}
+            \caption{(d) rejeitado}
+            \label{fig:fsm_chap9.3_prac49d_rej}
+        \end{figure}
+    \end{minipage}
+\end{table}
 
 \subsection{Máquina de Turing}
 
@@ -333,6 +431,10 @@ Os testes foram realizados a partir de exemplos extraídos do livro
     \label{tab:tm_chap9.4_ex40}
 \end{table}
 
+Dado os parâmetros acima, a MT executa corretamente, concluindo sua execução ao
+alcançar um estado não existente ou \textit{input} não existente para aquele
+estado.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{tm_chap9.4_ex40}
@@ -368,6 +470,10 @@ Os testes foram realizados a partir de exemplos extraídos do livro
 \begin{enumerate}[a.]
     \item \textit{String} de entrada: \textbf{10}
 \end{enumerate}
+
+Para esta \textit{string} de entrada, a MT executa corretamente, concluindo sua
+execução ao alcançar um estado não existente/\textit{input} não existente para
+aquele estado.
 
 \begin{figure}[H]
     \centering
@@ -459,6 +565,26 @@ reescrevendo \textbf{0} em \textbf{1} e \textbf{1} em \textbf{0}, até alcançar
 um \textbf{b}; após esse ponto, a mesma reverte a direção e desfaz as
 alterações. Ao alcançar outro \textbf{b}, ela novamente reverte de direção e
 o processo se repete.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{tm_own_ex_4i}
+    \caption{
+        MT definida na Tabela \ref{tab:tm_own_ex} após 4 iterações. O cabeçote
+        está se movendo para a direita.
+    }
+    \label{fig:tm_own_ex_4i}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{tm_own_ex_17i}
+    \caption{
+        MT definida na Tabela \ref{tab:tm_own_ex} após 17 iterações. O cabeçote
+        está se movendo para a esquerda.
+    }
+    \label{fig:tm_own_ex_17i}
+\end{figure}
 
 \begin{figure}[H]
     \centering
