@@ -312,20 +312,20 @@ Os testes foram realizados a partir de exemplos extraídos do livro
             Quíntuplas da máquina:
         \end{minipage}% <-- This comment fixes aligment, do not remove
         \begin{minipage}{.5\linewidth}
-            \begin{flushleft}
-                \ttfamily
-                (0, 0, 1, 0, R) \\
-                (0, 1, 0, 0, R) \\
-                (0, b, 1, 1, L) \\
-                (1, 0, 0, 1, R) \\
-                (1, 1, 0, 1, R)
-            \end{flushleft}
+            \ttfamily
+            (0, 0, 1, 0, R) \\
+            (0, 1, 0, 0, R) \\
+            (0, b, 1, 1, L) \\
+            (1, 0, 0, 1, R) \\
+            (1, 1, 0, 1, R)
         \end{minipage}
 
     \end{minipage}% <------ This comment fixes aligment, do not remove
     \begin{minipage}{0.333\linewidth}
 
-        \textit{String} de entrada: \textbf{0110}
+       \begin{flushright}
+            \textit{String} de entrada: \textbf{0110}
+       \end{flushright}
 
     \end{minipage}
 
@@ -349,18 +349,16 @@ Os testes foram realizados a partir de exemplos extraídos do livro
 \begin{table}[H]
     \begin{minipage}{.5\linewidth}
         \begin{flushright}
-            Quíntuplas da máquina:\hspace*{2ex}    % Add unremovable space @ EOL
+            Quíntuplas da máquina:\hspace*{1ex}    % Add unremovable space @ EOL
         \end{flushright}
     \end{minipage}% <-- This comment fixes aligment, do not remove
     \begin{minipage}{.5\linewidth}
-        \begin{flushleft}
             \ttfamily
-            (0, 0, 0, 1, R) \\
-            (0, 1, 0, 0, R) \\
-            (0, b, b, 0, R) \\
-            (1, 0, 1, 0, R) \\
-            (1, 1, 1, 0, L)
-        \end{flushleft}
+            \hspace*{1ex}(0, 0, 0, 1, R) \\        % Add unremovable space @ SOL
+            \hspace*{1ex}(0, 1, 0, 0, R) \\        % Add unremovable space @ SOL
+            \hspace*{1ex}(0, b, b, 0, R) \\        % Add unremovable space @ SOL
+            \hspace*{1ex}(1, 0, 1, 0, R) \\        % Add unremovable space @ SOL
+            \hspace*{1ex}(1, 1, 1, 0, L)           % Add unremovable space @ SOL
     \end{minipage}
 
     \caption{\cite[p.\ 764, Practice 57]{judith}}
@@ -430,24 +428,24 @@ um esquema próprio.
     \begin{minipage}{0.6\linewidth}
 
         \begin{minipage}{0.55\linewidth}
-            Quíntuplas da máquina:
+                Quíntuplas da máquina:
         \end{minipage}% <-- This comment fixes aligment, do not remove
         \begin{minipage}{0.45\linewidth}
-            \begin{flushleft}
-                \ttfamily
-                (0, 0, 1, 0, R) \\
-                (0, 1, 0, 0, R) \\
-                (0, b, b, 1, L) \\
-                (1, 1, 0, 1, L) \\
-                (1, 0, 1, 1, L) \\
-                (1, b, b, 0, R)
-            \end{flushleft}
+            \ttfamily
+            (0, 0, 1, 0, R) \\
+            (0, 1, 0, 0, R) \\
+            (0, b, b, 1, L) \\
+            (1, 1, 0, 1, L) \\
+            (1, 0, 1, 1, L) \\
+            (1, b, b, 0, R)
         \end{minipage}
 
     \end{minipage}% <------ This comment fixes aligment, do not remove
     \begin{minipage}{0.4\linewidth}
 
-        \textit{String} de entrada: \textbf{000111000}
+        \begin{flushright}
+            \textit{String} de entrada: \textbf{000111000}
+        \end{flushright}
 
     \end{minipage}
 
