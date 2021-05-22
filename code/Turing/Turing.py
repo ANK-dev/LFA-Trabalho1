@@ -137,6 +137,10 @@ class Tape:
         self.current_pos += direction
 
         try:
+            # Avoid negative wraparound
+            if self.current_pos < 0:
+                raise IndexError
+
             return self.data[self.current_pos]
         except IndexError:
             # Stop execution if bounds of tape are reached
@@ -165,6 +169,10 @@ class Tape:
 
         # Keep head in place if direction is past the bounds of the tape
         try:
+            # Avoid negative wraparound
+            if self.current_pos + direction < 0:
+                raise IndexError
+
             # Draw tape head overlay at new index
             data[self.current_pos + direction] = (
                 f"{th_left}{data[self.current_pos + direction]}{th_right}"
