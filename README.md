@@ -5,7 +5,7 @@ Formal Languages and Automata - Assignment 1
 
 ## Requisitos / Requisites
 
-`python >= v3.8.5`, `pyyaml >= v5.3.1`
+`python >= v3.9.4`, `pyyaml >= v5.3.1`
 
 ## Uso / Usage
 
@@ -36,3 +36,4 @@ Turing.py` and follow the on-screen instructions.
 
 Criado por/Created by Ariel Nogueira Kovaljski
 ([ANK-dev](https://github.com/ANK-dev))
+
