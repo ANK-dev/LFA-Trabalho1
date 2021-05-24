@@ -186,8 +186,9 @@ A essência do funcionamento da MT é apresentada na figura acima, onde, para um
 dado estado, dependendo do símbolo de \textit{input}, pode-se ter diferentes
 símbolos de \textit{output}, direções e próximos estados.
 
-Na classe \verb|Tape|, a fita é implementada como uma lista de comprimento 70,
-que será preenchida com a \textit{string} de entrada.
+Na classe \verb|Tape|, a fita é implementada como uma lista de comprimento
+flexível, grande o suficiente para armazenar os dados com algumas células em
+branco ao redor, que será preenchida com a \textit{string} de entrada.
 
 Tanto o dicionário de quíntuplas quanto os dados de entrada da fita são
 preenchidos a partir da leitura de um arquivo \verb|.yaml|, onde o usuário pode
@@ -195,8 +196,8 @@ configurar os parâmetros da MT.
 
 Ao iniciar o programa, o mesmo realiza a inicialização de instâncias da MT e da
 fita, e exibe no console uma mensagem de confirmação: caso o usuário pressione
-\keys{\enter}, a execução da MT é iniciada, caso o usuário pressione
-\linebreak \keys{\ctrl+C} ou \keys{\ctrl+D}, o programa é encerrado. Partindo do
+\keys{\return}, a execução da MT é iniciada, caso o usuário pressione
+\keys{\ctrl+C} ou \keys{\ctrl+D}, o programa é encerrado. Partindo do
 pressuposto que o usuário decidiu iniciar a execução, o programa irá mostrar no
 console uma representação visual da fita, os dados nela presentes, e do cabeçote
 de leitura e escrita.
@@ -221,7 +222,7 @@ A cada iteração o cabeçote realiza uma etapa de leitura e uma etapa de escrit
 Durante a leitura, o símbolo lido é comparado com os símbolos de \textit{input}
 para aquele estado. Em seguida, o símbolo de \textit{output} é escrito, a MT
 assume o novo estado, e o cabeçote se move em uma nova direção. Caso o próximo
-estado não exista, ou o símbolo de entrada não consta dentre os \textit{inputs}
+estado não exista, ou o símbolo de entrada não conste dentre os \textit{inputs}
 do estado atual, o programa encerrará a sua execução.
 
 Devido a impossibilidade de se determinar para quais conjuntos de entradas e
@@ -232,8 +233,8 @@ usuário deseje, este também pode parar a execução do programa a qualquer
 momento, pressionando \linebreak \keys{\ctrl+C}.
 
 Devido aos limites físicos de um computador real em relação à MT teórica --- no
-caso, memória finita --- caso o cabeçote passe dos limites da fita (estabelecido
-como 70), a execução do programa será encerrada.
+caso, memória finita --- caso o cabeçote passe dos limites da fita, a execução
+do programa será encerrada.
 
 \section{Resultados}
 
@@ -272,6 +273,7 @@ Os testes foram realizados a partir de exemplos extraídos do livro
     \label{tab:fsm_chap9.3_ex29}
 \end{table}
 
+\noindent
 Para a MEF acima e este \textit{input}, temos a seguinte saída:
 \begin{figure}[H]
     \centering
@@ -288,6 +290,7 @@ Para a MEF acima e este \textit{input}, temos a seguinte saída:
 ``For the machine \textit{M} of Example 29, what output sequence is produced by
 the input sequence 11001?''
 
+\vspace{\baselineskip} \noindent
 Dado esta entrada, temos a seguinte saída:
 \begin{figure}[H]
     \centering
@@ -308,6 +311,7 @@ Dado esta entrada, temos a seguinte saída:
     \label{fig:fsm_chap9.3_prac49}
 \end{figure}
 
+\noindent
 Dado este conjunto de MEFs, cada uma é responsável pelo reconhecimento de uma
 expressão regular:
 
@@ -431,6 +435,7 @@ Os testes foram realizados a partir de exemplos extraídos do livro
     \label{tab:tm_chap9.4_ex40}
 \end{table}
 
+\noindent
 Dado os parâmetros acima, a MT executa corretamente, concluindo sua execução ao
 alcançar um estado não existente ou \textit{input} não existente para aquele
 estado.
@@ -467,10 +472,13 @@ estado.
     \label{tab:tm_chap9.4_prac57}
 \end{table}
 
+\hrule
+\vspace{\baselineskip}
 \begin{enumerate}[a.]
     \item \textit{String} de entrada: \textbf{10}
 \end{enumerate}
 
+\noindent
 Para esta \textit{string} de entrada, a MT executa corretamente, concluindo sua
 execução ao alcançar um estado não existente/\textit{input} não existente para
 aquele estado.
@@ -485,10 +493,13 @@ aquele estado.
     \label{fig:tm_chap9.4_prac57a}
 \end{figure}
 
+\hrule
+
 \begin{enumerate}[resume*]
     \item \textit{String} de entrada: \textbf{01}
 \end{enumerate}
 
+\noindent
 Para esta \textit{string} de entrada, a máquina fica presa em um \textit{loop},
 sendo necessário a parada manual de sua execução (\keys{\ctrl+C}). Mesmo assim,
 a fita alcança um estado final, após o qual os seus dados não são mais
@@ -504,10 +515,13 @@ alterados.
     \label{fig:tm_chap9.4_prac57b}
 \end{figure}
 
+\hrule
+
 \begin{enumerate}[resume*]
     \item \textit{String} de entrada: \textbf{00}
 \end{enumerate}
 
+\noindent
 Para esta \textit{string} de entrada, o cabeçote começa a se mover para a
 direita sem fim. Devido aos limites físicos da fita previamente estabelecidos,
 ao alcançar a extremidade direita, a execução é abortada. Apesar disso, após
@@ -559,6 +573,7 @@ um esquema próprio.
     \label{tab:tm_own_ex}
 \end{table}
 
+\noindent
 Para a MT acima, o seu comportamento independe da string de entrada. Dado que
 não seja vazia (\textbf{b}), a mesma ficará presa em um \textit{loop} infinito,
 reescrevendo \textbf{0} em \textbf{1} e \textbf{1} em \textbf{0}, até alcançar
